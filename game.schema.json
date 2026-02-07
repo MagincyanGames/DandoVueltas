@@ -278,6 +278,9 @@
     "_version": {
       "type": "integer"
     },
+    "name": {
+      "type": "string"
+    },
     "time": {
       "type": "number"
     },
