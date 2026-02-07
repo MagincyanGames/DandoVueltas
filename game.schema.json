@@ -1,0 +1,315 @@
+{
+  "description": "Schema manual para GameProperties",
+  "definitions": {
+    "TileSchema": {
+      "type": "string",
+      "description": "Asset's name from Resources/Schemas/Tiles",
+      "enum": [
+        "Block",
+        "Border",
+        "Floor",
+        "Slime"
+      ]
+    },
+    "EffectSchema": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Asset's name from Resources/Schemas/Effects",
+      "enum": [
+        "Dead",
+        "Slime"
+      ]
+    },
+    "EntitySchema": {
+      "type": "string",
+      "description": "Prefab name from Resources/Prefabs/Entities",
+      "enum": [
+        "Spikiki"
+      ]
+    },
+    "TileProperties": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "tile": {
+          "$ref": "#/definitions/TileSchema"
+        },
+        "percent": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "tile",
+        "percent"
+      ]
+    },
+    "EffectProperties": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "effect": {
+          "$ref": "#/definitions/EffectSchema"
+        },
+        "time": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "effect",
+        "time"
+      ]
+    },
+    "EntityProperties": {
+      "type": "object",
+      "properties": {
+        "on_tile_collision": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "propertyNames": {
+            "enum": [
+              "Block",
+              "Border",
+              "Floor",
+              "Slime"
+            ]
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/EffectProperties"
+          }
+        },
+        "on_entity_collision": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "propertyNames": {
+            "enum": [
+              "Spikiki"
+            ]
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/EffectProperties"
+          }
+        }
+      },
+      "required": [
+        "on_tile_collision",
+        "on_entity_collision"
+      ]
+    },
+    "PlayerProperties": {
+      "type": "object",
+      "properties": {
+        "speed": {
+          "type": "number"
+        },
+        "angular_damp": {
+          "type": "number"
+        },
+        "linear_damp": {
+          "type": "number"
+        },
+        "size": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "speed",
+        "angular_damp",
+        "linear_damp",
+        "size",
+        "on_collision"
+      ],
+      "on_tile_collision": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "propertyNames": {
+          "enum": [
+            "Block",
+            "Border",
+            "Floor",
+            "Slime"
+          ]
+        },
+        "additionalProperties": {
+          "$ref": "#/definitions/EffectProperties"
+        }
+      },
+      "on_entity_collision": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "propertyNames": {
+          "enum": [
+            "Spikiki"
+          ]
+        },
+        "additionalProperties": {
+          "$ref": "#/definitions/EffectProperties"
+        }
+      }
+    },
+    "SpikikiProperties": {
+      "type": "object",
+      "properties": {
+        "velocity_plus_distance": {
+          "type": "integer"
+        },
+        "speed": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "speed",
+        "on_tile_collision",
+        "on_entity_collision"
+      ],
+      "on_tile_collision": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "propertyNames": {
+          "enum": [
+            "Block",
+            "Border",
+            "Floor",
+            "Slime"
+          ]
+        },
+        "additionalProperties": {
+          "$ref": "#/definitions/EffectProperties"
+        }
+      },
+      "on_entity_collision": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "propertyNames": {
+          "enum": [
+            "Spikiki"
+          ]
+        },
+        "additionalProperties": {
+          "$ref": "#/definitions/EffectProperties"
+        }
+      }
+    },
+    "SpawnerProperties": {
+      "type": "object",
+      "properties": {
+        "entity": {
+          "$ref": "#/definitions/EntitySchema"
+        },
+        "props": {
+          "description": "Properties specific to the entity type (EntityProps or SpikikiProperties)",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/EntityProperties"
+            },
+            {
+              "$ref": "#/definitions/PlayerProperties"
+            },
+            {
+              "$ref": "#/definitions/SpikikiProperties"
+            }
+          ]
+        },
+        "time": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "entity",
+        "props",
+        "time"
+      ]
+    },
+    "GeneratorProperties": {
+      "type": "object",
+      "properties": {
+        "height": {
+          "type": "integer"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "spawn_radio": {
+          "type": "integer"
+        },
+        "spawn_tile": {
+          "$ref": "#/definitions/TileSchema"
+        },
+        "border": {
+          "$ref": "#/definitions/TileSchema"
+        },
+        "tiles": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/TileProperties"
+          }
+        }
+      },
+      "required": [
+        "height",
+        "width",
+        "border",
+        "tiles"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "_version": {
+      "type": "integer"
+    },
+    "time": {
+      "type": "number"
+    },
+    "seed": {
+      "description": "Generator's seed",
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string",
+          "enum": [
+            "Random",
+            "Daily"
+          ]
+        }
+      ]
+    },
+    "generator": {
+      "$ref": "#/definitions/GeneratorProperties"
+    },
+    "player": {
+      "$ref": "#/definitions/EntityProperties"
+    },
+    "spawns": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/SpawnerProperties"
+      }
+    }
+  }
+}
